@@ -1,0 +1,43 @@
+.heart,
+.rose {
+    position: fixed;
+    font-size: 24px;
+    pointer-events: none;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+    }
+}
+
+.sticker {
+    animation: bounce 2s infinite;
+    width: 300px; /* Adjust the size as needed */
+    height: auto;
+    display: block;
+    margin: 0 auto 2rem; /* Center the image and add bottom margin */
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.btn-hover {
+    transition: transform 0.3s ease;
+}
+
+.btn-hover:hover {
+    transform: scale(1.1);
+}
+
+.cute-shadow {
+    text-shadow: 2px 2px 4px rgba(255, 192, 203, 0.5);
+}

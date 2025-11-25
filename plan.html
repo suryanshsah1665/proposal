@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Perfect Date ❤️</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(-180deg); }
+            70% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0); }
+        }
+
+        .handwritten { font-family: 'Dancing Script', cursive; }
+        .floating { animation: float 3s infinite ease-in-out; }
+        .sparkle { position: absolute; pointer-events: none; animation: sparkle 1.5s infinite; }
+        .timeline-item { transition: transform 0.3s ease; }
+        .timeline-item:hover { transform: scale(1.02); }
+        .glow { text-shadow: 0 0 10px rgba(255, 182, 193, 0.8); }
+        .gradient-bg { background: linear-gradient(135deg, #ffe6e6 0%, #ffb6c1 100%); }
+        .sticker { animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen">
+
+<div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+<div class="container mx-auto px-4 py-8 relative z-10">
+    <div class="text-center mb-16 floating">
+        <h1 class="handwritten text-4xl md:text-6xl text-pink-600 glow mb-4">
+            Welcome, my Boondi Kii Laddu! 💝
+        </h1>
+        <p class="handwritten text-2xl md:text-3xl text-pink-500">
+            Today is all about us and our unforgettable memories 💞
+        </p>
+    </div>
+
+    <!-- Countdown Timer -->
+    <!-- Countdown Timer -->
+    <div class="text-center mb-12 bg-white/50 rounded-xl p-6 backdrop-blur-sm">
+        <h2 class="handwritten text-2xl text-pink-600 mb-2">
+            Counting the moments until our perfect date! ⏳💞
+        </h2>
+
+        <div id="countdown" class="text-3xl text-pink-500 font-bold"></div>
+
+        <!-- 👇 NEW pretty text line -->
+        <div id="prettyDate" class="handwritten text-lg text-pink-600 mt-2"></div>
+    </div>
+
+
+
+    <!-- Timeline -->
+    <div class="max-w-3xl mx-auto space-y-8">
+
+        <!-- Timeline Blocks -->
+        <div class="timeline-item bg-white/70 rounded-xl p-6 backdrop-blur-sm">
+            <h3 class="handwritten text-2xl text-pink-600 mb-2">🌅 Morning Surprise</h3>
+            <p>Start the day with sunshine and smiles.</p>
+            <button onclick="revealMessage(this,'🌞','Good morning, my love!')" class="mt-4 px-4 py-2 bg-pink-400 text-white rounded-full">Reveal 💌</button>
+        </div>
+
+        <div class="timeline-item bg-white/70 rounded-xl p-6 backdrop-blur-sm">
+            <h3 class="handwritten text-2xl text-pink-600 mb-2">☕ Breakfast Date</h3>
+            <p>Sweet talks over warm coffee.</p>
+            <button onclick="revealMessage(this,'☕','Every sip feels special with you.')" class="mt-4 px-4 py-2 bg-pink-400 text-white rounded-full">Read 💝</button>
+        </div>
+
+        <div class="timeline-item bg-white/70 rounded-xl p-6 backdrop-blur-sm">
+            <h3 class="handwritten text-2xl text-pink-600 mb-2">🌆 Evening Walk</h3>
+            <p>Hand in hand forever.</p>
+            <button onclick="revealMessage(this,'🌸','Walking with you feels like a dream.')" class="mt-4 px-4 py-2 bg-pink-400 text-white rounded-full">Discover 🌟</button>
+        </div>
+
+        <div class="timeline-item bg-white/70 rounded-xl p-6 backdrop-blur-sm">
+            <h3 class="handwritten text-2xl text-pink-600 mb-2">🍽️ Candle Light Dinner</h3>
+            <p>The most magical moment of the day.</p>
+            <button onclick="revealMessage(this,'🕯️','Tonight belongs to us.')" class="mt-4 px-4 py-2 bg-pink-400 text-white rounded-full">Evening 🌙</button>
+        </div>
+    </div>
+
+    <div class="text-center mt-16">
+        <button onclick="showConfession()" class="px-8 py-4 bg-pink-500 text-white rounded-full text-xl shadow-lg hover:scale-105 transition-transform">
+            Final Surprise 🎁
+        </button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="confession-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl p-8 max-w-lg mx-4 text-center">
+        <button onclick="hideConfession()" class="absolute top-2 right-2">✕</button>
+        <div class="handwritten text-3xl text-pink-600">
+            I love you, my Boondi Kii Laddu ❤️
+            Forever & Always 💖
+        </div>
+    </div>
+</div>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+    // --------- COUNTDOWN LOGIC ---------
+    let targetDate;
+
+    // Read date & time from URL
+    function initTargetDate() {
+        const params = new URLSearchParams(window.location.search);
+        const dateStr = params.get("date"); // YYYY-MM-DD
+        const timeStr = params.get("time"); // HH:MM
+
+        if (dateStr && timeStr) {
+            const isoString = `${dateStr}T${timeStr}:00`;
+            const d = new Date(isoString);
+
+            if (!isNaN(d.getTime())) {
+                targetDate = d;
+                showPrettyDate(d); // ✅ display formatted date
+                return;
+            }
+        }
+
+        // fallback 3 days
+        targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 3);
+        showPrettyDate(targetDate);
+    }
+
+    // Pretty date text display
+    function showPrettyDate(dateObj) {
+        const optionsDate = {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        };
+
+        const optionsTime = {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        };
+
+        const prettyDate = dateObj.toLocaleDateString(undefined, optionsDate);
+        const prettyTime = dateObj.toLocaleTimeString(undefined, optionsTime);
+
+        const prettyEl = document.getElementById("prettyDate");
+        if (prettyEl) {
+            prettyEl.textContent = `💖 Our perfect date: ${prettyDate} at ${prettyTime}`;
+        }
+    }
+
+    // Existing countdown function (keep as is or replace)
+    function updateCountdown() {
+        if (!targetDate) return;
+
+        const now = new Date();
+        let diff = targetDate - now;
+        if (diff < 0) diff = 0;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").textContent =
+            `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Init
+    initTargetDate();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.innerHTML = '💖';
+        heart.className = 'absolute text-2xl';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = '-20px';
+        document.getElementById('hearts-container').appendChild(heart);
+        heart.animate([{transform:'translateY(0)'},{transform:'translateY(100vh)'}],{duration:5000});
+        setTimeout(()=>heart.remove(),5000);
+    },300);
+
+    function revealMessage(button, sticker, message){
+        const parent = button.parentElement;
+        const div = document.createElement('div');
+        div.innerHTML = `<div class="text-6xl sticker">${sticker}</div><p class="handwritten text-pink-500">${message}</p>`;
+        button.replaceWith(div);
+    }
+
+    function showConfession(){
+        document.getElementById('confession-modal').style.display='flex';
+    }
+
+    function hideConfession(){
+        document.getElementById('confession-modal').style.display='none';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Will You Be My Boondi Kii Laddu?</title>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .heart,
+        .rose {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        .sticker {
+            animation: bounce 2s infinite;
+            width: 300px;
+            height: auto;
+            display: block;
+            margin: 0 auto 2rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .btn-hover {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-hover:hover {
+            transform: scale(1.1);
+        }
+
+        .cute-shadow {
+            text-shadow: 2px 2px 4px rgba(255, 192, 203, 0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-50 via-rose-100 to-purple-100 flex flex-col items-center justify-center overflow-hidden">
+<!-- Main Content Container -->
+<div class="text-center z-10 bg-white/40 backdrop-blur-sm p-12 rounded-3xl shadow-xl border-2 border-pink-200">
+    <!-- Proposal Text -->
+    <h1 class="text-5xl font-bold text-pink-400 mb-8 cute-shadow animate-pulse">
+        Can you be my Boondi Ka Ladoo??
+    </h1>
+
+    <!-- Sticker -->
+    <!-- put download.jpg in same folder -->
+    <img src="download.jpg" alt="Sticker" class="sticker mb-10">
+
+    <!-- Buttons Container -->
+    <div class="flex justify-center items-center gap-6">
+        <button id="yesBtn"
+                class="btn-hover bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all text-xl">
+            Yes
+        </button>
+        <button id="noBtn"
+                class="btn-hover bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 px-10 rounded-full shadow-lg transition-all text-xl">
+            No
+        </button>
+    </div>
+</div>
+
+<script>
+    // Function to create falling elements
+    function createFallingElement(type) {
+        const element = document.createElement("div");
+        element.className = type === "heart" ? "heart" : "rose";
+        element.innerHTML = type === "heart" ? "❤️" : "🌹";
+        element.style.left = Math.random() * 100 + "vw";
+        element.style.animationDuration = Math.random() * 3 + 2 + "s";
+        document.body.appendChild(element);
+
+        // Remove element after animation
+        element.addEventListener("animationend", () => element.remove());
+    }
+
+    // Create falling hearts and roses periodically
+    setInterval(() => createFallingElement("heart"), 100);
+    setInterval(() => createFallingElement("rose"), 200);
+
+    // Button handling
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    let scale = 1;
+
+    noBtn.addEventListener("click", () => {
+        scale += 0.5;
+        yesBtn.style.transform = `scale(${scale})`;
+
+        // Shake animation for No button
+        gsap.to(noBtn, {
+            x: "+=10",
+            duration: 0.1,
+            yoyo: true,
+            repeat: 5
+        });
+    });
+
+    yesBtn.addEventListener("click", () => {
+        // Celebration animation
+        gsap.to(".sticker", {
+            scale: 2,
+            duration: 0.5,
+            yoyo: true,
+            repeat: 1
+        });
+
+        // Burst of hearts
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => createFallingElement("heart"), i * 50);
+        }
+
+        // Smooth transition + redirect
+        gsap.to("body", {
+            opacity: 0,
+            duration: 1,
+            onComplete: () => {
+                // change this to your real target page if needed
+                window.location.href = "datetime-.html";
+            }
+        });
+    });
+</script>
+</body>
+</html>
