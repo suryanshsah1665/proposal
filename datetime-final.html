@@ -210,14 +210,43 @@
             return;
         }
 
-        // URL parameters ke through date/time bhej do
+        // --------- 1) URL params for plan.html ----------
         const params = new URLSearchParams({
-            date: d,       // YYYY-MM-DD
-            time: t        // HH:MM
+            date: d,   // YYYY-MM-DD
+            time: t    // HH:MM
         });
 
+        // --------- 2) Pretty text for WhatsApp ----------
+        const dateObj = new Date(`${d}T${t}:00`);
+
+        const prettyDate = dateObj.toLocaleDateString(undefined, {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+
+        const prettyTime = dateObj.toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        });
+
+        const message = `Maine yeh date select ki hai: ${prettyDate} at ${prettyTime} 💖`;
+
+        // ⚠️ yahan apna number daalna: 91 ke baad without + and without spaces
+        const yourNumber = "917869512390";
+
+        const waUrl =
+            `https://wa.me/${yourNumber}?text=` + encodeURIComponent(message);
+
+        // --------- 3) WhatsApp + Plan page dono open karo ----------
+        // WhatsApp new tab / app
+        window.open(waUrl, "_blank");
+
+        // saath hi plan.html bhi open ho jaaye (same flow continue)
         window.location.href = "plan.html?" + params.toString();
     }
+
 
 </script>
 </body>
