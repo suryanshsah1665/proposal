@@ -2,7 +2,7 @@
 
 A small, playful multi-page website built for fun: a proposal where the "No" button refuses to be clicked, followed by a date picker that sends the chosen date and time to WhatsApp, and a page of sweet messages.
 
-**Live site:** `https://proposal-pi-five.vercel.app/`
+**Live site:** https://proposal-pi-five.vercel.app/
 
 ## How it works
 
